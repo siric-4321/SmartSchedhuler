@@ -18,7 +18,7 @@ from schedule_manager import ScheduleManager
 # UNIT TESTS FOR EVENT CLASS
 # ==============================================================
 
-class TestEvent(unittest.TestCase):
+class TestaEvent(unittest.TestCase):
 
     def test_duration_valid(self):
         """Duration should correctly return numeric hour difference."""
@@ -47,6 +47,48 @@ class TestEvent(unittest.TestCase):
         e1 = Event("A", "2025-03-05", 9, 10)
         e2 = Event("B", "2025-03-06", 9, 10)
         self.assertFalse(e1.conflicts_with(e2))
+
+    # New duration edge case: start == end
+    def test_duration_zero(self):
+        """Zero-length event should have duration 0."""
+        e = Event("Zero", "2025-03-05", 9, 9)
+        self.assertEqual(e.duration(), 0)
+
+    # Edge test cases
+    
+    # New validation edge case: end before start
+    # Accepts either a graceful None return or a ValueError,
+    # since different implementations handle this differently.
+    def test_duration_end_before_start(self):
+        """End before start should fail gracefully or raise ValueError."""
+        e = Event("Backwards", "2025-03-05", 11, 9)
+        try:
+            result = e.duration()
+            self.assertIsNone(result)
+        except ValueError:
+            pass
+
+    # New conflict property test: conflicts should be symmetric
+    def test_conflicts_symmetry(self):
+        """Conflict result should be symmetric between two events."""
+        e1 = Event("A", "2025-03-05", 9, 10)
+        e2 = Event("B", "2025-03-05", 9.5, 11)
+        self.assertTrue(e1.conflicts_with(e2))
+        self.assertTrue(e2.conflicts_with(e1))
+
+    # New overlap pattern: one event fully inside another
+    def test_conflicts_containment(self):
+        """One event completely inside another should conflict."""
+        e1 = Event("A", "2025-03-05", 9, 12)
+        e2 = Event("B", "2025-03-05", 10, 11)
+        self.assertTrue(e1.conflicts_with(e2))
+
+    # New overlap pattern: identical ranges
+    def test_conflicts_same_times(self):
+        """Events with identical times should conflict."""
+        e1 = Event("A", "2025-03-05", 9, 10)
+        e2 = Event("B", "2025-03-05", 9, 10)
+        self.assertTrue(e1.conflicts_with(e2))
 
 
 # ==============================================================
