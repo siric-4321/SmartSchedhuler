@@ -7,7 +7,6 @@ import unittest
 import sys
 import os
 
-# Fix import path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from event import Event
@@ -71,7 +70,6 @@ class TestScheduleManager(unittest.TestCase):
 
         self.manager.add_event(e1)
 
-        # Capture printed output
         import io
         import sys
         captured = io.StringIO()
