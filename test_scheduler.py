@@ -1,11 +1,15 @@
 # --------------------------------------------------------------
 # AI-GENERATED TEST CODE (ChatGPT)
-# Prompt: "Generate unit tests for Event and ScheduleManager,
-# including integration tests for PM5. Include tests for duration,
-# conflicts, adding events, listing events, and next available time."
+# Prompt: "Generate unit tests for Event and ScheduleManager."
 # --------------------------------------------------------------
 
 import unittest
+import sys
+import os
+
+# Fix import path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from event import Event
 from schedule_manager import ScheduleManager
 
